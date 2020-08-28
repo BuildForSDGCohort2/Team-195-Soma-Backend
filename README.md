@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
 
 <p align="center">
@@ -59,3 +60,8 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+=======
+# Team-195-soma-Backend
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d7b6e22c27d54caf8cf632132da145b6)](https://app.codacy.com/gh/BuildForSDGCohort2/Team-195-soma-Backend?utm_source=github.com&utm_medium=referral&utm_content=BuildForSDGCohort2/Team-195-soma-Backend&utm_campaign=Badge_Grade_Settings)
+>>>>>>> cfc5439f85b0f093788e1b1ab8a3daa9779271e6
