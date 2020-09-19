@@ -15,13 +15,10 @@ class CreateCourseTable extends Migration
     {
         Schema::create('course', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger("category_id");
-            $table->unsignedBigInteger("language_id");
-            $table->string("name");
+            $table->string("name")->unique("course_name");
             $table->text("description");
             $table->timestamps();
-            $table->foreign("category_id","fk_category")->references("id")->on("category")->onDelete("cascade")->onUpdate("cascade");
-            $table->foreign("language_id","fk_language")->references("id")->on("language")->onDelete("cascade")->onUpdate("cascade");
+            
         });
     }
 
