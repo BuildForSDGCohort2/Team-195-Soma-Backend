@@ -12,7 +12,7 @@ class Language extends Model
 
     public function courses()
     {
-        return $this->hasManyThrough("App\Course","App\CourseLang");
+        return $this->hasManyThrough("App\Course","App\CourseCatLang");
     }
 
     

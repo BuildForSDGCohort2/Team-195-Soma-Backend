@@ -4,7 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Category;
 use App\Course;
+use App\CourseCatLang;
 use App\Http\Controllers\Controller;
+use App\Language;
 use App\Lesson;
 use Illuminate\Http\Request;
 
@@ -44,6 +46,32 @@ class ManageEntries extends Controller{
         return response()->json(["message"=>$message,"category_id"=>$category->id]);
     }
 
+    public function manLanguage(Request $req)
+    {
+        //Function to manage the language(add,update)
+            $id=$req->input('id');$language=null;
+        if($id==null){
+            //if not exists add the language
+            $language=Language::create(
+            [
+                'name'=>$req->input('name'),
+                'country'=>$req->input('country'),
+            ]
+            );
+            $message="Language added Successfully!";
+        }else
+        {   //if exists update the language
+            $message="Language updated Successfully!";
+            $language=Language::find($id);
+            $language->name=$req->input('name');
+            $language->country=$req->input('country');
+            
+            $language->save();
+        }
+        
+        return response()->json(["message"=>$message,"language_id"=>$language->id]);
+    }
+
     public function manCourse(Request $req)
     {
         //Function to manage the courses(add,update)
@@ -56,6 +84,14 @@ class ManageEntries extends Controller{
                 'description'=>$req->input('description'),
             ]
             );
+
+            CourseCatLang::create(
+                [
+                    'course_id'=>$course->id,
+                    'language_id'=>$req->input('language'),
+                    'category_id'=>$req->input('category')
+                ]
+                );
             $message="Course added Successfully!";
         }else
         {   //if exists update the course
@@ -94,7 +130,7 @@ class ManageEntries extends Controller{
             $lesson->writing_explanation=$req->input('writing_explanation');
             $lesson->save();
         }
-        $course=Course::find($req->input('course_id'));
+        $course=Course::find($req->input('course'));
         $lesson->course()->associate($course);
         $lesson->save();
         return response()->json(["message"=>$message,"lesson_id"=>$lesson->id]);

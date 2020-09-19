@@ -12,12 +12,12 @@ class Course extends Model
 
     public function categories()
     {
-        return $this->hasManyThrough("App\Category","App\CourseCate");
+        return $this->hasManyThrough("App\Category","App\CourseCatLang");
     }
 
     public function languages()
     {
-        return $this->hasManyThrough("App\Language","App\CourseLang");
+        return $this->hasManyThrough("App\Language","App\CourseCatLang");
     }
 
     public function lessons()
