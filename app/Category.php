@@ -10,9 +10,9 @@ class Category extends Model
 
     protected $fillable=['name','code'];
 
-    public function course()
+    public function courses()
     {
-        return $this->hasMany("App\Course");
+        return $this->hasManyThrough("App\Course","App\CourseCat");
     }
 
     

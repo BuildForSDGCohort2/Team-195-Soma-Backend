@@ -53,7 +53,7 @@ class ManageEntries extends Controller{
             $course=Course::create(
             [
                 'name'=>$req->input('name'),
-                'lesson_number'=>$req->input('description'),
+                'description'=>$req->input('description'),
             ]
             );
             $message="Course added Successfully!";
