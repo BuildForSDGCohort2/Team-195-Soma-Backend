@@ -23,9 +23,11 @@ Route::middleware('auth:api')->group(function(){
 });
 
 Route::group(['prefix'=>'man'], function ($router) {
+  
+  Route::post('category', 'API\ManageEntries@manCategory');
+  Route::post('language', 'API\ManageEntries@manLanguage');
   Route::post('course', 'API\ManageEntries@manCourse');
   Route::post('lesson', 'API\ManageEntries@manLesson');
-  Route::post('category', 'API\ManageEntries@manCategory');
   
 });
 

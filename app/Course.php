@@ -8,10 +8,16 @@ class Course extends Model
 {
     //
     protected $fillable=['name','description'];
+    protected $table="course";
 
-    public function category()
+    public function categories()
     {
-        return $this->hasMany("App\Category");
+        return $this->hasManyThrough("App\Category","App\CourseCatLang");
+    }
+
+    public function languages()
+    {
+        return $this->hasManyThrough("App\Language","App\CourseCatLang");
     }
 
     public function lessons()
