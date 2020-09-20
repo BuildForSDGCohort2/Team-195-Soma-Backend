@@ -28,6 +28,7 @@ Route::group(['prefix'=>'man'], function ($router) {
   Route::post('language', 'API\ManageEntries@manLanguage');
   Route::post('course', 'API\ManageEntries@manCourse');
   Route::post('lesson', 'API\ManageEntries@manLesson');
+  Route::post('delete', 'API\ManageEntries@delEntrie');
   
 });
 
