@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Language;
 use App\Lesson;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ManageEntries extends Controller{
     //class to manage(add,update) the entries
@@ -134,6 +135,15 @@ class ManageEntries extends Controller{
         $lesson->course()->associate($course);
         $lesson->save();
         return response()->json(["message"=>$message,"lesson_id"=>$lesson->id]);
+    }
+
+    public function delEntrie(Request $req)
+    {
+        # code...
+        $table=$req->input('table');
+        DB::table($table)->where('id', $req->input('id'))->delete();
+
+        return response()->json("Entrie deleted succesfully! ");
     }
 }
 
