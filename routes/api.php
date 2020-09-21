@@ -1,5 +1,9 @@
 <?php
 
+use App\Category;
+use App\Course;
+use App\Language;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +35,69 @@ Route::group(['prefix'=>'man'], function ($router) {
   Route::post('delete', 'API\ManageEntries@delEntrie');
   
 });
+
+Route::get('admin', function (Request $req)
+{
+
+//$user=User::find(auth()->user()->id);
+
+//if ($user->role_id==1) {
+    
+    $cours=Course::where('id', '>', 0)->orderBy('id', 'desc')->get();
+    $users=User::where('id', '>', 0)->orderBy('id', 'desc')->get();
+    $cat=Category::where('id', '>', 0)->orderBy('id', 'desc')->get();
+    $langs=Language::where('id', '>', 0)->orderBy('id', 'desc')->get();
+
+
+foreach ($users as $key=> $user)
+    $user->role;
+
+foreach ($cours as $key=> $cour){
+    $cour->languages;
+    $cour->categories;
+    $cour->lessons;
+}
+
+
+return response()->json(
+[
+    "course"=>$cours,
+    "users"=>$users,
+    "categories"=>$cat,
+    "langs"=>$langs
+]);
+//}
+});
+
+Route::post('user-data', function (Request $req)
+{
+    $case=$req->input('case');
+
+    if($case===0){
+      $cours=Course::where('id', '>', 0)->orderBy('id', 'desc')->get();
+
+      foreach ($cours as $key=> $cour){
+        $cour->languages;
+        $cour->categories;
+        $cour->lessons;
+     }
+    return response()->json(["courses"=>$cours]);
+    }else{
+      $user=User::find(auth()->user()->id);
+      $lessons=$user->lessons();
+      foreach ($lessons as $key=> $lesson)
+            $lesson->course;
+
+      return response()->json(
+        [
+            "lessons"=>$lessons,
+            "tests"=>$user->tests(),
+            "practiceq"=>$user->practices()
+            
+        ]);
+    }
+}
+);
 
 Route::get("test",function () {
 
