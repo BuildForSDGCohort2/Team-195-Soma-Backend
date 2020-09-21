@@ -69,6 +69,18 @@ return response()->json(
 //}
 });
 
+Route::post('get-course', function (Request $req)
+{
+    $case=$req->input('case');
+    $cours=null;
+    if($case===0){
+      $cours=Course::where('id', '>', 0)->orderBy('id', 'desc')->get();
+    }else{
+      
+    }
+}
+);
+
 Route::get("test",function () {
 
     return response()->json(["Test Api"=>"Success!"]);
