@@ -69,14 +69,32 @@ return response()->json(
 //}
 });
 
-Route::post('get-course', function (Request $req)
+Route::post('user-data', function (Request $req)
 {
     $case=$req->input('case');
-    $cours=null;
+
     if($case===0){
       $cours=Course::where('id', '>', 0)->orderBy('id', 'desc')->get();
+
+      foreach ($cours as $key=> $cour){
+        $cour->languages;
+        $cour->categories;
+        $cour->lessons;
+     }
+    return response()->json(["courses"=>$cours]);
     }else{
-      
+      $user=User::find(auth()->user()->id);
+      $lessons=$user->lessons();
+      foreach ($lessons as $key=> $lesson)
+            $lesson->course;
+
+      return response()->json(
+        [
+            "lessons"=>$lessons,
+            "tests"=>$user->tests(),
+            "practiceq"=>$user->practices()
+            
+        ]);
     }
 }
 );

@@ -57,4 +57,6 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough("App\Practice","App\Student","user_id","id");
     }
+
+
 }
