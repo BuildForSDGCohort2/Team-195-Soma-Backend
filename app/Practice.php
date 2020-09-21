@@ -4,7 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Writing_practice extends Model
+
+class Practice extends Model
 {
     //
+    protected $fillable=['name','description'];
+    protected $table="practice";
+
 }

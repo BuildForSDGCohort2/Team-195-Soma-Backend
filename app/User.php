@@ -37,4 +37,26 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function role()
+    {
+        return $this->belongsTo("App\Role");
+    }
+
+    public function lessons()
+    {
+        return $this->hasManyThrough("App\Lesson","App\Student","user_id","id");
+    }
+
+    public function tests()
+    {
+        return $this->hasManyThrough("App\Test","App\Student","user_id","id");
+    }
+
+    public function practices()
+    {
+        return $this->hasManyThrough("App\Practice","App\Student","user_id","id");
+    }
+
+
 }
