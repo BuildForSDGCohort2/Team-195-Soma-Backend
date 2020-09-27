@@ -28,10 +28,14 @@ Route::middleware('auth:api')->group(function(){
 
 Route::group(['prefix'=>'man'], function ($router) {
   
+  Route::post('role', 'API\ManageEntries@manRole');
   Route::post('category', 'API\ManageEntries@manCategory');
   Route::post('language', 'API\ManageEntries@manLanguage');
   Route::post('course', 'API\ManageEntries@manCourse');
   Route::post('lesson', 'API\ManageEntries@manLesson');
+  Route::post('test', 'AddEntities@manTest');
+  Route::post('grades', 'AddEntities@addGrade');
+  Route::post('grades', 'AddEntities@studentActivities');
   Route::post('delete', 'API\ManageEntries@delEntrie');
   
 });
@@ -49,8 +53,10 @@ Route::get('admin', function (Request $req)
     $langs=Language::where('id', '>', 0)->orderBy('id', 'desc')->get();
 
 
-foreach ($users as $key=> $user)
+foreach ($users as $key=> $user){
     $user->role;
+    $user->grades;
+}
 
 foreach ($cours as $key=> $cour){
     $cour->languages;
@@ -85,14 +91,20 @@ Route::post('user-data', function (Request $req)
     }else{
       $user=User::find(auth()->user()->id);
       $lessons=$user->lessons();
+      $grades=$user->grades();
+
       foreach ($lessons as $key=> $lesson)
             $lesson->course;
+
+      foreach ($grades as $key=> $grade)
+            $grade->course;
 
       return response()->json(
         [
             "lessons"=>$lessons,
             "tests"=>$user->tests(),
-            "practiceq"=>$user->practices()
+            "grades"=>$grades,
+            "practice"=>$user->practices()
             
         ]);
     }
