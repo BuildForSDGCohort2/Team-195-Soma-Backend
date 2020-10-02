@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     //
-
+    protected $table="category";
     protected $fillable=['name','code'];
 
-    public function course()
+    public function courses()
     {
-        return $this->hasMany("App\Course");
+        return $this->hasManyThrough("App\Course","App\CourseCatLang");
     }
 
     

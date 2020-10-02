@@ -42,4 +42,25 @@ class User extends Authenticatable
     {
         return $this->belongsTo("App\Role");
     }
+
+    public function lessons()
+    {
+        return $this->hasManyThrough("App\Lesson","App\Student","user_id","id");
+    }
+
+    public function tests()
+    {
+        return $this->hasManyThrough("App\Test","App\Student","user_id","id");
+    }
+
+    public function practices()
+    {
+        return $this->hasManyThrough("App\Practice","App\Student","user_id","id");
+    }
+
+    public function grades()
+    {
+        return $this->hasMany("App\Grade");
+    }
+
 }

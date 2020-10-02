@@ -1,5 +1,9 @@
 <?php
 
+use App\Category;
+use App\Course;
+use App\Language;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,11 +27,89 @@ Route::middleware('auth:api')->group(function(){
 });
 
 Route::group(['prefix'=>'man'], function ($router) {
+  
+  Route::post('role', 'API\ManageEntries@manRole');
+  Route::post('category', 'API\ManageEntries@manCategory');
+  Route::post('language', 'API\ManageEntries@manLanguage');
   Route::post('course', 'API\ManageEntries@manCourse');
   Route::post('lesson', 'API\ManageEntries@manLesson');
-  Route::post('category', 'API\ManageEntries@manCategory');
+  Route::post('test', 'AddEntities@manTest');
+  Route::post('grades', 'AddEntities@addGrade');
+  Route::post('grades', 'AddEntities@studentActivities');
+  Route::post('delete', 'API\ManageEntries@delEntrie');
   
 });
+
+Route::get('admin', function (Request $req)
+{
+
+//$user=User::find(auth()->user()->id);
+
+//if ($user->role_id==1) {
+    
+    $cours=Course::where('id', '>', 0)->orderBy('id', 'desc')->get();
+    $users=User::where('id', '>', 0)->orderBy('id', 'desc')->get();
+    $cat=Category::where('id', '>', 0)->orderBy('id', 'desc')->get();
+    $langs=Language::where('id', '>', 0)->orderBy('id', 'desc')->get();
+
+
+foreach ($users as $key=> $user){
+    $user->role;
+    $user->grades;
+}
+
+foreach ($cours as $key=> $cour){
+    $cour->languages;
+    $cour->categories;
+    $cour->lessons;
+}
+
+
+return response()->json(
+[
+    "course"=>$cours,
+    "users"=>$users,
+    "categories"=>$cat,
+    "langs"=>$langs
+]);
+//}
+});
+
+Route::post('user-data', function (Request $req)
+{
+    $case=$req->input('case');
+
+    if($case===0){
+      $cours=Course::where('id', '>', 0)->orderBy('id', 'desc')->get();
+
+      foreach ($cours as $key=> $cour){
+        $cour->languages;
+        $cour->categories;
+        $cour->lessons;
+     }
+    return response()->json(["courses"=>$cours]);
+    }else{
+      $user=User::find(auth()->user()->id);
+      $lessons=$user->lessons();
+      $grades=$user->grades();
+
+      foreach ($lessons as $key=> $lesson)
+            $lesson->course;
+
+      foreach ($grades as $key=> $grade)
+            $grade->course;
+
+      return response()->json(
+        [
+            "lessons"=>$lessons,
+            "tests"=>$user->tests(),
+            "grades"=>$grades,
+            "practice"=>$user->practices()
+            
+        ]);
+    }
+}
+);
 
 Route::get("test",function () {
 
