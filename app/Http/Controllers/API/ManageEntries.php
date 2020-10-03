@@ -241,11 +241,11 @@ class ManageEntries extends Controller{
                     'user_id'=>auth()->user()->id
                 ]
           );
-          $message="Grade added Successfully!";
+          $message="Activity added Successfully!";
        
 
         
-        return response()->json(["message"=>$message,"grade "=>$gr]);
+        return response()->json(["message"=>$message,"Student Activities "=>$student]);
     }
 
 
