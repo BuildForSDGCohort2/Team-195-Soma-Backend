@@ -3,6 +3,7 @@
 use App\Category;
 use App\Course;
 use App\Language;
+use App\Lesson;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -73,6 +74,35 @@ return response()->json(
     "langs"=>$langs
 ]);
 //}
+});
+
+Route::post('uploadFile', function (Request $req)
+{
+ 
+  $id=$req->get("id");
+  $files=$req->get("file");
+  $lang=$req->get("lang");
+  $url='';
+
+  if(isset($id)){
+    $lesson=Lesson::find($id);
+    if(count($files)>0){
+      foreach ($files as $key => $file) {
+        $url= $file->store('public/voices/'.$lang).",";
+      }
+
+      $lesson->voice_link=$url;
+      $lesson->save();
+
+    }else{
+      $lesson->video_link=$url;
+      $lesson->save();
+    }
+    
+  }else {
+    $url=$files->storeAs('public/avatar', auth()->user()->id.'.jpeg');
+   }
+
 });
 
 Route::post('user-data', function (Request $req)

@@ -147,7 +147,6 @@ class ManageEntries extends Controller{
             [
                 'name'=>$req->input('name'),
                 'lesson_number'=>$req->input('lesson_number'),
-                'writing_explanation'=>$req->input('writing_explanation')
             ]
             );
             $message="Lesson added Successfully!";
@@ -158,7 +157,7 @@ class ManageEntries extends Controller{
             $lesson->course()->dissociate();
             $lesson->name=$req->input('name');
             $lesson->lesson_number=$req->input('lesson_number');
-            $lesson->writing_explanation=$req->input('writing_explanation');
+            
             $lesson->save();
         }
         $course=Course::find($req->input('course'));
