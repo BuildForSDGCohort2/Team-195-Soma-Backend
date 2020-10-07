@@ -244,7 +244,7 @@ class ManageEntries extends Controller{
        
 
         
-        return response()->json(["message"=>$message,"grade "=>$gr]);
+        return response()->json(["message"=>$message,"grade "=>$student]);
     }
 
 

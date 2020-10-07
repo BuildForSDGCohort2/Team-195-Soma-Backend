@@ -36,7 +36,7 @@ Route::group(['prefix'=>'man'], function ($router) {
   Route::post('lesson', 'API\ManageEntries@manLesson');
   Route::post('test', 'AddEntities@manTest');
   Route::post('grades', 'AddEntities@addGrade');
-  Route::post('grades', 'AddEntities@studentActivities');
+  Route::post('studentActivity', 'AddEntities@studentActivities');
   Route::post('delete', 'API\ManageEntries@delEntrie');
   
 });
