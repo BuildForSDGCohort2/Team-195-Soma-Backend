@@ -18,14 +18,24 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('login', 'API\AuthController@login');
-Route::post('register', 'API\AuthController@register');
+
  
-Route::middleware('auth:api')->group(function(){
- 
-  Route::post('user_detail', 'API\AuthController@user_detail');
+//Route::group(function(){
+
   
+
+//});
+
+Route::group([
+  'middleware' => 'api',
+], function ($router) {
+  Route::post('login', 'API\AuthController@login');
+  Route::post('register', 'API\AuthController@register');
+  Route::post('logout', 'API\AuthController@logout');
+  Route::post('refresh', 'API\AuthController@refresh');
+  Route::post('user_detail', 'API\AuthController@user_detail');
 });
+
 
 Route::group(['prefix'=>'man'], function ($router) {
   
@@ -34,9 +44,9 @@ Route::group(['prefix'=>'man'], function ($router) {
   Route::post('language', 'API\ManageEntries@manLanguage');
   Route::post('course', 'API\ManageEntries@manCourse');
   Route::post('lesson', 'API\ManageEntries@manLesson');
-  Route::post('test', 'AddEntities@manTest');
-  Route::post('grades', 'AddEntities@addGrade');
-  Route::post('studentActivity', 'AddEntities@studentActivities');
+  Route::post('test', 'API\ManageEntries@manTest');
+  Route::post('grades', 'API\ManageEntries@addGrade');
+  Route::post('studentActivity', 'API\ManageEntries@studentActivities');
   Route::post('delete', 'API\ManageEntries@delEntrie');
   
 });
@@ -143,5 +153,5 @@ Route::post('user-data', function (Request $req)
 
 Route::get("test",function () {
 
-    return response()->json(["Test Api"=>"Success!"]);
+    return response()->json(["Test Api"=>auth()->user()]);
 });
