@@ -41,6 +41,7 @@ class AuthController extends Controller
           'email' => 'required|email',
           'password' => 'required',
           'password_confirmation' => 'required|same:password',
+          'role_id'=>'required'
         ]);
      
         if ($validator->fails()) {
@@ -60,6 +61,7 @@ class AuthController extends Controller
             'user'=>$luser,
             'access_token' => $token,
             'token_type' => 'bearer',
+            'expires_in'=>300
         ])->header('Authorization', $token);
     }
 

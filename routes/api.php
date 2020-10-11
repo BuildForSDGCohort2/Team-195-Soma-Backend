@@ -34,8 +34,12 @@ Route::group([
   Route::post('logout', 'API\AuthController@logout');
   Route::post('refresh', 'API\AuthController@refresh');
   Route::post('user_detail', 'API\AuthController@user_detail');
+  
 });
 
+Route::group(['middleware' => 'auth:api'], function ($router) {
+  Route::post('students', 'API\ManageEntries@studentActivities');
+});
 
 Route::group(['prefix'=>'man'], function ($router) {
   
@@ -46,7 +50,6 @@ Route::group(['prefix'=>'man'], function ($router) {
   Route::post('lesson', 'API\ManageEntries@manLesson');
   Route::post('test', 'API\ManageEntries@manTest');
   Route::post('grades', 'API\ManageEntries@addGrade');
-  Route::post('studentActivity', 'API\ManageEntries@studentActivities');
   Route::post('delete', 'API\ManageEntries@delEntrie');
   
 });
