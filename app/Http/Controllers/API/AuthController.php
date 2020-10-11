@@ -11,6 +11,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
+
+
+  public function __construct()
+  {
+      
+      $this->middleware('auth:api', ['except' => ['login', 'register']]);
+  }
     public function login(Request $request){
  
         $credentials = [
@@ -20,8 +27,8 @@ class AuthController extends Controller
      
         if( auth()->attempt($credentials) ){
           $user = Auth::user();
-      $success['token'] =  $user->createToken('AppName')->accessToken;
-          return response()->json(['success' => $success,'user'=>$user], 200);
+          $success['token'] =  $user->createToken('AppName')->accessToken;
+          return $this->genUserToken($success['token'],$user);
         } else {
     return response()->json(['error'=>'Unauthorised'], 401);
         }
@@ -43,13 +50,34 @@ class AuthController extends Controller
     $data['password'] = Hash::make($data['password']);
     $user = User::create($data);
     $success['token'] =  $user->createToken('AppName')->accessToken;
-    return response()->json(['success'=>$success], 200);
+    return $this->genUserToken($success['token'],$user);
      
       }
-        
+
+      protected function genUserToken($token,$user=null)
+    {        $luser=$user!=null?$user:auth()->user();
+        return response()->json([
+            'user'=>$luser,
+            'access_token' => $token,
+            'token_type' => 'bearer',
+        ])->header('Authorization', $token);
+    }
+
+    public function refresh(){
+      $user=auth()->user();
+        return $this->genUserToken($user->createToken('AppName')->refreshToken);
+    }
+
+      public function logout(Request $request){
+        $request->user()->token()->revoke();        
+        return response()->json([
+          'message' => 'Successfully logged out'
+          ]);
+        }
+
       public function user_detail()
       {
-    $user = Auth::user();
+    $user = auth()->user();
     return response()->json(['success' => $user], 200);
       }
 }
