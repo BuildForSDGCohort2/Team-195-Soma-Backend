@@ -3,6 +3,7 @@
 use App\Category;
 use App\Course;
 use App\Language;
+use App\Lesson;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -17,13 +18,27 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('login', 'API\AuthController@login');
-Route::post('register', 'API\AuthController@register');
+
  
-Route::middleware('auth:api')->group(function(){
- 
+//Route::group(function(){
+
+  
+
+//});
+
+Route::group([
+  'middleware' => 'api',
+], function ($router) {
+  Route::post('login', 'API\AuthController@login');
+  Route::post('register', 'API\AuthController@register');
+  Route::post('logout', 'API\AuthController@logout');
+  Route::post('refresh', 'API\AuthController@refresh');
   Route::post('user_detail', 'API\AuthController@user_detail');
   
+});
+
+Route::group(['middleware' => 'auth:api'], function ($router) {
+  Route::post('students', 'API\ManageEntries@studentActivities');
 });
 
 Route::group(['prefix'=>'man'], function ($router) {
@@ -34,8 +49,7 @@ Route::group(['prefix'=>'man'], function ($router) {
   Route::post('course', 'API\ManageEntries@manCourse');
   Route::post('lesson', 'API\ManageEntries@manLesson');
   Route::post('test', 'API\ManageEntries@manTest');
-  Route::post('grade', 'API\ManageEntries@addGrade');
-  Route::post('studentActivity', 'API\ManageEntries@studentActivities');
+  Route::post('grades', 'API\ManageEntries@addGrade');
   Route::post('delete', 'API\ManageEntries@delEntrie');
   
 });
@@ -73,6 +87,35 @@ return response()->json(
     "langs"=>$langs
 ]);
 //}
+});
+
+Route::post('uploadFile', function (Request $req)
+{
+ 
+  $id=$req->get("id");
+  $files=$req->get("file");
+  $lang=$req->get("lang");
+  $url='';
+
+  if(isset($id)){
+    $lesson=Lesson::find($id);
+    if(count($files)>0){
+      foreach ($files as $key => $file) {
+        $url= $file->store('public/voices/'.$lang).",";
+      }
+
+      $lesson->voice_link=$url;
+      $lesson->save();
+
+    }else{
+      $lesson->video_link=$url;
+      $lesson->save();
+    }
+    
+  }else {
+    $url=$files->storeAs('public/avatar', auth()->user()->id.'.jpeg');
+   }
+
 });
 
 Route::post('user-data', function (Request $req)
@@ -113,5 +156,5 @@ Route::post('user-data', function (Request $req)
 
 Route::get("test",function () {
 
-    return response()->json(["Test Api"=>"Success!"]);
+    return response()->json(["Test Api"=>auth()->user()]);
 });
