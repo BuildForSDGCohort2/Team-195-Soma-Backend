@@ -19,12 +19,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
- 
-//Route::group(function(){
-
-  
-
-//});
 
 Route::group([
   'middleware' => 'api',
@@ -39,6 +33,43 @@ Route::group([
 
 Route::group(['middleware' => 'auth:api'], function ($router) {
   Route::post('students', 'API\ManageEntries@studentActivities');
+
+  Route::post('user-data', function (Request $req)
+{
+    $case=$req->input('case');
+
+    if($case===0){
+      $cours=Course::where('id', '>', 0)->orderBy('id', 'desc')->get();
+
+      foreach ($cours as $key=> $cour){
+        $cour->languages;
+        $cour->categories;
+        $cour->lessons;
+     }
+    return response()->json(["courses"=>$cours]);
+    }else{
+      $user=User::find(auth()->user()->id);
+      $lessons=$user->lessons;
+      $grades=$user->grades;
+
+      foreach ($lessons as $key=> $lesson)
+            $lesson->course;
+
+      foreach ($grades as $key=> $grade)
+            $grade->course;
+
+      return response()->json(
+        [
+            
+            "lessons"=>$lessons,
+            "tests"=>$user->tests,
+            "grades"=>$grades,
+            "practice"=>$user->practices
+            
+        ]);
+    }
+}
+);
 });
 
 Route::group(['prefix'=>'man'], function ($router) {
@@ -117,42 +148,6 @@ Route::post('uploadFile', function (Request $req)
    }
 
 });
-
-Route::post('user-data', function (Request $req)
-{
-    $case=$req->input('case');
-
-    if($case===0){
-      $cours=Course::where('id', '>', 0)->orderBy('id', 'desc')->get();
-
-      foreach ($cours as $key=> $cour){
-        $cour->languages;
-        $cour->categories;
-        $cour->lessons;
-     }
-    return response()->json(["courses"=>$cours]);
-    }else{
-      $user=User::find(auth()->user()->id);
-      $lessons=$user->lessons();
-      $grades=$user->grades();
-
-      foreach ($lessons as $key=> $lesson)
-            $lesson->course;
-
-      foreach ($grades as $key=> $grade)
-            $grade->course;
-
-      return response()->json(
-        [
-            "lessons"=>$lessons,
-            "tests"=>$user->tests(),
-            "grades"=>$grades,
-            "practice"=>$user->practices()
-            
-        ]);
-    }
-}
-);
 
 Route::get("test",function () {
 
