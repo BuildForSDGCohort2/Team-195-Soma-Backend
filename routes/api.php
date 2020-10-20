@@ -51,6 +51,7 @@ Route::group(['middleware' => 'auth:api'], function ($router) {
       $user=User::find(auth()->user()->id);
       $lessons=$user->lessons;
       $grades=$user->grades;
+      $course=Course::find($lessons[0]->course_id);
 
       foreach ($lessons as $key=> $lesson)
             $lesson->course;
@@ -61,7 +62,7 @@ Route::group(['middleware' => 'auth:api'], function ($router) {
       return response()->json(
         [
             
-            "lessons"=>$lessons,
+            "lessons"=>$course->lessons,
             "tests"=>$user->tests,
             "grades"=>$grades,
             "practice"=>$user->practices
@@ -96,6 +97,7 @@ Route::get('admin', function (Request $req)
     $users=User::where('id', '>', 0)->orderBy('id', 'desc')->get();
     $cat=Category::where('id', '>', 0)->orderBy('id', 'desc')->get();
     $langs=Language::where('id', '>', 0)->orderBy('id', 'desc')->get();
+    $lessons=Lesson::where('id', '>', 0)->orderBy('id', 'desc')->get();
 
 
 foreach ($users as $key=> $user){
@@ -106,8 +108,11 @@ foreach ($users as $key=> $user){
 foreach ($cours as $key=> $cour){
     $cour->languages;
     $cour->categories;
-    $cour->lessons;
 }
+
+foreach ($lessons as $key=> $lesson)
+    $lesson->course;
+  
 
 
 return response()->json(
@@ -115,7 +120,8 @@ return response()->json(
     "course"=>$cours,
     "users"=>$users,
     "categories"=>$cat,
-    "langs"=>$langs
+    "langs"=>$langs,
+    "lessons"=>$lessons
 ]);
 //}
 });
@@ -124,7 +130,7 @@ Route::post('uploadFile', function (Request $req)
 {
  
   $id=$req->get("id");
-  $files=$req->get("file");
+  $files=$req->get("files");
   $lang=$req->get("lang");
   $url='';
 
