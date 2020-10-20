@@ -141,12 +141,16 @@ class ManageEntries extends Controller{
     {
         //Function to manage the lessons(add,update)
             $id=$req->input('id');$lesson=null;
+            $media_type=$req->input('media_type');
+            $link='';
+            if($media_type==='video') $link=$req->input('media');
         if($id==null){
             //if not exists add the lesson
             $lesson=Lesson::create(
             [
                 'name'=>$req->input('name'),
                 'lesson_number'=>$req->input('lesson_number'),
+                'video_link'=>$link
             ]
             );
             $message="Lesson added Successfully!";
@@ -156,11 +160,12 @@ class ManageEntries extends Controller{
             $lesson=Lesson::find($id);
             $lesson->course()->dissociate();
             $lesson->name=$req->input('name');
+            $lesson->video_link=$link;
             $lesson->lesson_number=$req->input('lesson_number');
             
             $lesson->save();
         }
-        $course=Course::find($req->input('course'));
+        $course=Course::find($req->input('course_id'));
         $lesson->course()->associate($course);
         $lesson->save();
         return response()->json(["message"=>$message,"lesson_id"=>$lesson->id]);
@@ -183,7 +188,7 @@ class ManageEntries extends Controller{
         }else
         {
             $test=Test::find($id);
-            $test->modules()->dissociate();
+            $test->course()->dissociate();
             
             $test->update
             ([
@@ -196,8 +201,8 @@ class ManageEntries extends Controller{
             $message="test updated Successfully!";
         }
 
-        $course=Course::find($req->input('course'));
-        $test->modules()->associate($course);
+        $course=Course::find($req->input('course_id'));
+        $test->course()->associate($course);
         
         $test->save();
         return response()->json(["message"=>$message,"test_id"=>$test->id]);
@@ -219,7 +224,7 @@ class ManageEntries extends Controller{
        
 
         $user=User::find(auth()->user()->id);
-        $course=Course::find($req->input('course'));
+        $course=Course::find($req->input('course_id'));
         $grade->user()->associate($user);
         $grade->user()->associate($course);
         
@@ -254,7 +259,7 @@ class ManageEntries extends Controller{
         $table=$req->input('table');
         DB::table($table)->where('id', $req->input('id'))->delete();
 
-        return response()->json("Entrie deleted succesfully! ");
+        return response()->json(["message"=>"Entrie deleted succesfully! "]);
     }
 }
 

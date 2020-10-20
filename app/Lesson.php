@@ -8,7 +8,7 @@ class Lesson extends Model
 {
     //
     protected $table="lesson";
-    protected $fillable=['lesson_number','name','writing_explanation'];
+    protected $fillable=['lesson_number','name','writing_explanation','video_link'];
 
     public function course()
     {
